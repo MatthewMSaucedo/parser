@@ -201,7 +201,49 @@ int block()
 {
     printNonTerminal(BLOCK);
 
-    /* TODO: Implement */
+    /**
+     * block is 
+	 * 1) const_declaration
+	 * 2) var_declaration
+	 * 3) proc_declaration
+	 * 4) statement
+     * */
+	 
+	// Parse const_declaration.
+    int err = const_declaration();
+
+    /**
+     * If parsing of const_declaration was not successful, immediately stop parsing
+     * and propagate the same error code by returning it.
+     * */
+    if(err) return err;
+
+    // Parse var_declaration.
+    err = var_declaration();
+
+    /**
+     * If parsing of var_declaration was not successful, immediately stop parsing
+     * and propagate the same error code by returning it.
+     * */
+    if(err) return err;
+	
+	// Parse proc_declaration.
+    err = proc_declaration();
+
+    /**
+     * If parsing of proc_declaration was not successful, immediately stop parsing
+     * and propagate the same error code by returning it.
+     * */
+    if(err) return err;
+	
+	// Parse statement.
+    err = statement();
+
+    /**
+     * If parsing of statement was not successful, immediately stop parsing
+     * and propagate the same error code by returning it.
+     * */
+    if(err) return err;
 
     return 0;
 }
