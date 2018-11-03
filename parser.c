@@ -321,7 +321,7 @@ int const_declaration()
             return 1;
 		}
 		
-		while(getCurrentTokenType() == commasym)
+		while (getCurrentTokenType() == commasym)
 		{
 			// Consume commasym
 			printCurrentToken(); // Printing the token is essential!
@@ -401,7 +401,68 @@ int var_declaration()
 {
     printNonTerminal(VAR_DECLARATION);
 
-    /* TODO: Implement */
+    // Is the current token a varsym?
+    if (getCurrentTokenType() == varsym)
+	{
+		// Consume varsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Is the current token a identsym?
+		if (getCurrentTokenType() == identsym)
+		{
+			// Consume identsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 3: 'const', 'var', 'procedure', 'read', 'write' must be followed by identifier.
+             * Stop parsing and return error code 3.
+             * */
+            return 3;
+		}
+		
+		while (getCurrentTokenType() == commasym)
+		{
+			// Consume commasym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+			
+			// Is the current token a identsym?
+			if (getCurrentTokenType() == identsym)
+			{
+				// Consume identsym
+				printCurrentToken(); // Printing the token is essential!
+				nextToken(); // Go to the next token..
+			}
+			else
+			{
+				/**
+				 * Error code 3: 'const', 'var', 'procedure', 'read', 'write' must be followed by identifier.
+				 * Stop parsing and return error code 3.
+				 * */
+				return 3;
+			}
+		}
+		
+		// Is the current token a semicolonsym? 
+		if (getCurrentTokenType() == semicolonsym)
+		{
+			// Consume semicolonsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 4: Semicolon or comma missing.
+             * Stop parsing and return error code 4.
+             * */
+            return 4;
+		}
+	}
 
     return 0;
 }
