@@ -252,8 +252,147 @@ int const_declaration()
 {
     printNonTerminal(CONST_DECLARATION);
 
-    /* TODO: Implement */
-
+    /**
+     * const_declaration is the following, though this is optional 
+	 * 1) "const"
+	 * 2) ident
+	 * 3) "="
+	 * 4) number
+	 *		repeat this 0 or more times
+	 *		a) ","
+	 *		b) ident
+	 *		c) "="
+	 *		d) number 
+	 * 5) ";"
+     * */
+	
+	// Is the current token a constsym?
+    if (getCurrentTokenType() == constsym)
+	{
+		// Consume constsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Is the current token a identsym?
+		if (getCurrentTokenType() == identsym)
+		{
+			// Consume identsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 3: 'const', 'var', 'procedure', 'read', 'write' must be followed by identifier.
+             * Stop parsing and return error code 3.
+             * */
+            return 3;
+		}
+		
+		// Is the current token a eqsym? 
+		if (getCurrentTokenType() == eqsym)
+		{
+			// Consume eqsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 2: Identifier must be followed by '='.
+             * Stop parsing and return error code 2.
+             * */
+            return 2;
+		}
+		
+		// Is the current token a numbersym? 
+		if (getCurrentTokenType() == numbersym)
+		{
+			// Consume numbersym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 1: '=' must be followed by a number.
+             * Stop parsing and return error code 1.
+             * */
+            return 1;
+		}
+		
+		while(getCurrentTokenType() == commasym)
+		{
+			// Consume commasym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+			
+			// Is the current token a identsym?
+			if (getCurrentTokenType() == identsym)
+			{
+				// Consume identsym
+				printCurrentToken(); // Printing the token is essential!
+				nextToken(); // Go to the next token..
+			}
+			else
+			{
+				/**
+				 * Error code 3: 'const', 'var', 'procedure', 'read', 'write' must be followed by identifier.
+				 * Stop parsing and return error code 3.
+				 * */
+				return 3;
+			}
+			
+			// Is the current token a eqsym? 
+			if (getCurrentTokenType() == eqsym)
+			{
+				// Consume eqsym
+				printCurrentToken(); // Printing the token is essential!
+				nextToken(); // Go to the next token..
+			}
+			else
+			{
+				/**
+				 * Error code 2: Identifier must be followed by '='.
+				 * Stop parsing and return error code 2.
+				 * */
+				return 2;
+			}
+			
+			// Is the current token a numbersym? 
+			if (getCurrentTokenType() == numbersym)
+			{
+				// Consume numbersym
+				printCurrentToken(); // Printing the token is essential!
+				nextToken(); // Go to the next token..
+			}
+			else
+			{
+				/**
+				 * Error code 1: '=' must be followed by a number.
+				 * Stop parsing and return error code 1.
+				 * */
+				return 1;
+			}
+		}
+		
+		// Is the current token a semicolonsym? 
+		if (getCurrentTokenType() == semicolonsym)
+		{
+			// Consume semicolonsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 4: Semicolon or comma missing.
+             * Stop parsing and return error code 4.
+             * */
+            return 4;
+		}
+	}
+	
     // Successful parsing.
     return 0;
 }
@@ -397,3 +536,20 @@ int factor()
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+/*
+do
+{
+			
+} while();
+*/
