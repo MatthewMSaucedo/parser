@@ -167,8 +167,33 @@ int program()
 {
     printNonTerminal(PROGRAM);
 
-    /* TODO: Implement */
+    /**
+     * Program is a block followed by "."
+     * */
+	 
+	// Parse block.
+    int err = block();
 
+    /**
+     * If parsing of block was not successful, immediately stop parsing
+     * and propagate the same error code by returning it.
+     * */
+    if(err) return err;
+
+    // After block, period should come
+    if(getCurrentTokenType() != periodsym)
+    {
+        /**
+         * Error code 6: Period expected.
+         * Stop parsing and return error code 6.
+         * */
+        return 6;
+    }
+
+    // It was a periodsym. Consume periodsym.
+    printCurrentToken(); // Printing the token is essential!
+    nextToken(); // Go to the next token..
+	
     return 0;
 }
 
