@@ -471,7 +471,69 @@ int proc_declaration()
 {
     printNonTerminal(PROC_DECLARATION);
 
-    /* TODO: Implement */
+    while (getCurrentTokenType() == procsym)
+	{
+		// Consume procsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+			
+		// Is the current token a identsym?
+		if (getCurrentTokenType() == identsym)
+		{
+			// Consume identsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+			 * Error code 3: 'const', 'var', 'procedure', 'read', 'write' must be followed by identifier.
+			 * Stop parsing and return error code 3.
+			 * */
+			return 3;
+		}
+		
+		// Is the current token a semicolonsym? 
+		if (getCurrentTokenType() == semicolonsym)
+		{
+			// Consume semicolonsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 5: Semicolon missing.
+             * Stop parsing and return error code 5.
+             * */
+            return 5;
+		}
+		
+		// Parse block.
+		int err = block();
+
+		/**
+		* If parsing of block was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+		
+		// Is the current token a semicolonsym? 
+		if (getCurrentTokenType() == semicolonsym)
+		{
+			// Consume semicolonsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 5: Semicolon missing.
+             * Stop parsing and return error code 5.
+             * */
+            return 5;
+		}
+	}
 
     return 0;
 }
