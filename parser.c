@@ -542,7 +542,246 @@ int statement()
 {
     printNonTerminal(STATEMENT);
 
-    /* TODO: Implement */
+    if (getCurrentTokenType() == identsym)
+	{
+		// Consume identsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Is the current token a becomessym?
+		if (getCurrentTokenType() == becomessym)
+		{
+			// Consume becomessym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+             * Error code 7: Assignment operator expected.
+             * Stop parsing and return error code 7.
+             * */
+            return 7;
+		}
+		
+		// Parse expression.
+		int err = expression();
+
+		/**
+		* If parsing of expression was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+	}
+	else if (getCurrentTokenType() == callsym)
+	{
+		// Consume callsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Is the current token a identsym?
+		if (getCurrentTokenType() == identsym)
+		{
+			// Consume identsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+			 * Error code 8: 'call' must be followed by an identifier.
+			 * Stop parsing and return error code 8.
+			 * */
+			return 8;
+		}
+	}
+	else if (getCurrentTokenType() == beginsym)
+	{
+		// Consume beginsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Parse statement.
+		int err = statement();
+
+		/**
+		* If parsing of statement was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+		
+		while (getCurrentTokenType() == semicolonsym)
+		{
+			// Consume semicolonsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+			
+			// Parse statement.
+			err = statement();
+
+			/**
+			* If parsing of statement was not successful, immediately stop parsing
+			* and propagate the same error code by returning it.
+			* */
+			if(err) return err;
+		}
+		
+		// Is the current token a endsym?
+		if (getCurrentTokenType() == endsym)
+		{
+			// Consume endsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+			 * Error code 10: Semicolon or 'end' expected.
+			 * Stop parsing and return error code 10.
+			 * */
+			return 10;
+		}
+	}
+	else if (getCurrentTokenType() == ifsym)
+	{
+		// Consume ifsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Parse condition.
+		int err = statement();
+
+		/**
+		* If parsing of condition was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+		
+		// Is the current token a thensym?
+		if (getCurrentTokenType() == thensym)
+		{
+			// Consume thensym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+			 * Error code 9: 'then' expected.
+			 * Stop parsing and return error code 9.
+			 * */
+			return 9;
+		}
+		
+		// Parse statement.
+		err = statement();
+
+		/**
+		* If parsing of statement was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+		
+		if (getCurrentTokenType() == elsesym)
+		{
+			// Consume elsesym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+			
+			// Parse statement.
+			err = statement();
+
+			/**
+			* If parsing of statement was not successful, immediately stop parsing
+			* and propagate the same error code by returning it.
+			* */
+			if(err) return err;
+		}
+	}
+	else if (getCurrentTokenType() == whilesym)
+	{
+		// Consume whilesym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Parse condition.
+		int err = condition();
+
+		/**
+		* If parsing of condition was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+		
+		// Is the current token a dosym?
+		if (getCurrentTokenType() == dosym)
+		{
+			// Consume dosym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+			 * Error code 11: 'do' expected.
+			 * Stop parsing and return error code 11.
+			 * */
+			return 11;
+		}
+		
+		// Parse statement.
+		err = statement();
+
+		/**
+		* If parsing of condition was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+	}
+	else if (getCurrentTokenType() == readsym)
+	{
+		// Consume readsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Is the current token a identsym?
+		if (getCurrentTokenType() == identsym)
+		{
+			// Consume identsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+			 * Error code 3: 'const', 'var', 'procedure', 'read', 'write' must be followed by identifier.
+			 * Stop parsing and return error code 3.
+			 * */
+			return 3;
+		}
+	}
+	else if (getCurrentTokenType() == writesym)
+	{
+		// Consume writesym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Is the current token a identsym?
+		if (getCurrentTokenType() == identsym)
+		{
+			// Consume identsym
+			printCurrentToken(); // Printing the token is essential!
+			nextToken(); // Go to the next token..
+		}
+		else
+		{
+			/**
+			 * Error code 3: 'const', 'var', 'procedure', 'read', 'write' must be followed by identifier.
+			 * Stop parsing and return error code 3.
+			 * */
+			return 3;
+		}
+	}
 
     return 0;
 }
@@ -671,6 +910,8 @@ int factor()
 
 
 /*
+if it doesn't compile, check that if(blah blah) is followed by a consume
+
 do
 {
 			
