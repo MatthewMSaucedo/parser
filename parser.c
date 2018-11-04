@@ -843,8 +843,48 @@ int relop()
 {
     printNonTerminal(REL_OP);
 
-    /* TODO: Implement */
-
+    if (getCurrentTokenType() == eqsym)
+	{
+		// Consume eqsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..	
+	}
+	else if (getCurrentTokenType() == neqsym)
+	{
+		// Consume neqsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	}
+	else if (getCurrentTokenType() == lessym)
+	{
+		// Consume lessym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	}
+	else if (getCurrentTokenType() == leqsym)
+	{
+		// Consume leqsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	}
+	else if (getCurrentTokenType() == gtrsym)
+	{
+		// Consume gtrsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	}
+	else if (getCurrentTokenType() == geqsym)
+	{
+		// Consume geqsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	}
+	else
+	{
+		// Relational operator expected
+		return (12);
+	}
+	
     return 0;
 }
 
