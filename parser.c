@@ -790,8 +790,52 @@ int condition()
 {
     printNonTerminal(CONDITION);
 
-    /* TODO: Implement */
+    // Is the current token a oddsym?
+	if (getCurrentTokenType() == oddsym)
+	{
+		// Consume oddsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	
+		// Parse expression.
+		int err = expression();
 
+		/**
+		* If parsing of statement was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+	}
+	else
+	{
+		// Parse expression.
+		int err = expression();
+
+		/**
+		* If parsing of statement was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+		
+		// Parse relop.
+		err = relop();
+
+		/**
+		* If parsing of statement was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+		
+		// Parse expression.
+		err = expression();
+
+		/**
+		* If parsing of statement was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+	}
+	
     return 0;
 }
 
