@@ -892,8 +892,44 @@ int expression()
 {
     printNonTerminal(EXPRESSION);
 
-    /* TODO: Implement */
+    if (getCurrentTokenType() == plussym)
+	{
+		// Consume plussym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	}
+	else if (getCurrentTokenType() == minussym)
+	{
+		// Consume minussym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+	}
+	
+	// Parse term.
+	int err = term();
 
+	/**
+	* If parsing of term was not successful, immediately stop parsing
+	* and propagate the same error code by returning it.
+	* */
+	if(err) return err;
+	
+	while (getCurrentTokenType() == plussym || getCurrentTokenType() == minussym)
+	{
+		// Consume plussym or minussym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Parse term.
+		err = term();
+
+		/**
+		* If parsing of term was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+	}
+	
     return 0;
 }
 
@@ -901,8 +937,31 @@ int term()
 {
     printNonTerminal(TERM);
 
-    /* TODO: Implement */
+    // Parse factor.
+	int err = factor();
 
+	/**
+	* If parsing of factor was not successful, immediately stop parsing
+	* and propagate the same error code by returning it.
+	* */
+	if(err) return err;
+	
+	while (getCurrentTokenType() == multsym || getCurrentTokenType() == slashsym)
+	{
+		// Consume multsym or slashsym
+		printCurrentToken(); // Printing the token is essential!
+		nextToken(); // Go to the next token..
+		
+		// Parse term.
+		err = term();
+
+		/**
+		* If parsing of term was not successful, immediately stop parsing
+		* and propagate the same error code by returning it.
+		* */
+		if(err) return err;
+	}
+	
     return 0;
 }
 
