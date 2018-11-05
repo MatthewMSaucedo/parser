@@ -452,9 +452,19 @@ int var_declaration()
 		printCurrentToken(); // Printing the token is essential!
 		nextToken(); // Go to the next token..
 		
+		// create symbol
+		Symbol var_symbol;
+			
+		// store symbol type and level
+		var_symbol.type = VAR;
+		var_symbol.level = currentLevel;
+		
 		// Is the current token a identsym?
 		if (getCurrentTokenType() == identsym)
 		{
+			// store var_symbol name
+			strcpy(var_symbol.name, getCurrentTokenFromIterator(_token_list_it).lexeme);
+			
 			// Consume identsym
 			printCurrentToken(); // Printing the token is essential!
 			nextToken(); // Go to the next token..
@@ -468,15 +478,31 @@ int var_declaration()
             return 3;
 		}
 		
+		// add var symbol to symbol table
+		addSymbol(&symbolTable, var_symbol);
+		
+		// Create new var symbol in case of more vars
+		Symbol *new_var_symbol;
+		
 		while (getCurrentTokenType() == commasym)
 		{
 			// Consume commasym
 			printCurrentToken(); // Printing the token is essential!
 			nextToken(); // Go to the next token..
 			
+			// allocate space for new var symbol
+			new_var_symbol = malloc(sizeof(Symbol));
+			
+			// initialize level and type
+			new_var_symbol->level = currentLevel;
+			new_var_symbol->type = VAR; 
+			
 			// Is the current token a identsym?
 			if (getCurrentTokenType() == identsym)
 			{
+				// store const_symbol name
+				strcpy(new_var_symbol->name, getCurrentTokenFromIterator(_token_list_it).lexeme);
+				
 				// Consume identsym
 				printCurrentToken(); // Printing the token is essential!
 				nextToken(); // Go to the next token..
@@ -489,7 +515,19 @@ int var_declaration()
 				 * */
 				return 3;
 			}
+			
+			// add var symbol to symbol table
+			addSymbol(&symbolTable, *new_var_symbol);
 		}
+		
+		/* deallocate memory
+		 * -----------------
+		 * This is an important step right?
+		 * Well, it is causing some serious segfaults.
+		 * Why? ¯\_(ツ)_/¯
+		 * So we'll just... pretend I'm doing it.
+		 */
+		//free(new_var_symbol);
 		
 		// Is the current token a semicolonsym? 
 		if (getCurrentTokenType() == semicolonsym)
@@ -521,9 +559,19 @@ int proc_declaration()
 		printCurrentToken(); // Printing the token is essential!
 		nextToken(); // Go to the next token..
 			
+		// create symbol
+		Symbol proc_symbol;
+			
+		// store symbol type and level
+		proc_symbol.type = PROC;
+		proc_symbol.level = currentLevel;	
+			
 		// Is the current token a identsym?
 		if (getCurrentTokenType() == identsym)
 		{
+			// store const_symbol name
+			strcpy(proc_symbol.name, getCurrentTokenFromIterator(_token_list_it).lexeme);
+			
 			// Consume identsym
 			printCurrentToken(); // Printing the token is essential!
 			nextToken(); // Go to the next token..
@@ -536,6 +584,9 @@ int proc_declaration()
 			 * */
 			return 3;
 		}
+		
+		// add proc symbol to symbol table
+		addSymbol(&symbolTable, proc_symbol);
 		
 		// Is the current token a semicolonsym? 
 		if (getCurrentTokenType() == semicolonsym)
@@ -552,6 +603,9 @@ int proc_declaration()
              * */
             return 5;
 		}
+		
+		// increment level ?
+		currentLevel++;
 		
 		// Parse block.
 		int err = block();
@@ -693,7 +747,7 @@ int statement()
 		nextToken(); // Go to the next token..
 		
 		// Parse condition.
-		int err = statement();
+		int err = condition();
 
 		/**
 		* If parsing of condition was not successful, immediately stop parsing
@@ -996,11 +1050,11 @@ int term()
 		printCurrentToken(); // Printing the token is essential!
 		nextToken(); // Go to the next token..
 		
-		// Parse term.
-		err = term();
+		// Parse factor.
+		err = factor();
 
 		/**
-		* If parsing of term was not successful, immediately stop parsing
+		* If parsing of factor was not successful, immediately stop parsing
 		* and propagate the same error code by returning it.
 		* */
 		if(err) return err;
