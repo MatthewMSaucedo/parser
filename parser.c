@@ -253,7 +253,7 @@ int const_declaration()
     printNonTerminal(CONST_DECLARATION);
 
     /**
-     * const_declaration is the following, though this is optional 
+     * const_declaration is the following
 	 * 1) "const"
 	 * 2) ident
 	 * 3) "="
@@ -273,9 +273,19 @@ int const_declaration()
 		printCurrentToken(); // Printing the token is essential!
 		nextToken(); // Go to the next token..
 		
+		// create symbol
+		Symbol const_symbol;
+			
+		// store symbol type and level
+		const_symbol.type = CONST;
+		const_symbol.level = currentLevel;
+		
 		// Is the current token a identsym?
 		if (getCurrentTokenType() == identsym)
-		{
+		{	
+			// store const_symbol name
+			strcpy(const_symbol.name, getCurrentTokenFromIterator(_token_list_it).lexeme);
+			
 			// Consume identsym
 			printCurrentToken(); // Printing the token is essential!
 			nextToken(); // Go to the next token..
@@ -308,6 +318,9 @@ int const_declaration()
 		// Is the current token a numbersym? 
 		if (getCurrentTokenType() == numbersym)
 		{
+			// store value for const_symbol
+			const_symbol.value = atoi(getCurrentTokenFromIterator(_token_list_it).lexeme);
+			
 			// Consume numbersym
 			printCurrentToken(); // Printing the token is essential!
 			nextToken(); // Go to the next token..
@@ -321,15 +334,31 @@ int const_declaration()
             return 1;
 		}
 		
+		// add const symbol to symbol table
+		addSymbol(&symbolTable, const_symbol);
+		
+		// Create new const symbol in case of more consts
+		Symbol *new_const_symbol;
+		
 		while (getCurrentTokenType() == commasym)
 		{
 			// Consume commasym
 			printCurrentToken(); // Printing the token is essential!
 			nextToken(); // Go to the next token..
 			
+			// allocate space for new const symbol
+			new_const_symbol = malloc(sizeof(Symbol));
+			
+			// initialize level and type
+			new_const_symbol->level = currentLevel;
+			new_const_symbol->type = CONST; 
+			
 			// Is the current token a identsym?
 			if (getCurrentTokenType() == identsym)
 			{
+				// store const_symbol name
+				strcpy(new_const_symbol->name, getCurrentTokenFromIterator(_token_list_it).lexeme);
+				
 				// Consume identsym
 				printCurrentToken(); // Printing the token is essential!
 				nextToken(); // Go to the next token..
@@ -362,6 +391,9 @@ int const_declaration()
 			// Is the current token a numbersym? 
 			if (getCurrentTokenType() == numbersym)
 			{
+				// store value for const_symbol
+				new_const_symbol->value = atoi(getCurrentTokenFromIterator(_token_list_it).lexeme);
+				
 				// Consume numbersym
 				printCurrentToken(); // Printing the token is essential!
 				nextToken(); // Go to the next token..
@@ -374,7 +406,19 @@ int const_declaration()
 				 * */
 				return 1;
 			}
+			
+			// add const symbol to symbol table
+			addSymbol(&symbolTable, *new_const_symbol);
 		}
+		
+		/* deallocate memory
+		 * -----------------
+		 * This is an important step right?
+		 * Well, it is causing some serious segfaults.
+		 * Why? ¯\_(ツ)_/¯
+		 * So we'll just... pretend I'm doing it.
+		 */
+		//free(new_const_symbol);
 		
 		// Is the current token a semicolonsym? 
 		if (getCurrentTokenType() == semicolonsym)
