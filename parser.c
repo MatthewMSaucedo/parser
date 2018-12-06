@@ -604,12 +604,15 @@ int proc_declaration()
             return 5;
 		}
 		
-		// increment level ?
+		// increment level before block
 		currentLevel++;
 		
 		// Parse block.
 		int err = block();
-
+		
+		// decrement level after block
+		currentLevel--;
+		
 		/**
 		* If parsing of block was not successful, immediately stop parsing
 		* and propagate the same error code by returning it.
@@ -1139,22 +1142,3 @@ int factor()
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-/*
-if it doesn't compile, check that if(blah blah) is followed by a consume
-
-do
-{
-			
-} while();
-*/
